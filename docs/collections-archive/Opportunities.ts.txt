@@ -1,0 +1,78 @@
+import type { CollectionConfig } from 'payload'
+
+import { opsOnly, publicContentRead } from '../access'
+
+/** 合作机会：岗位、导师、企业与资源（借鉴 Vital Voices 的连接机制） */
+export const Opportunities: CollectionConfig = {
+  slug: 'opportunities',
+  labels: {
+    singular: '合作机会',
+    plural: '合作机会',
+  },
+  admin: {
+    group: '公开内容',
+    useAsTitle: 'title',
+    defaultColumns: ['title', 'org', 'type', 'region', 'deadline'],
+  },
+  access: {
+    // 公开可读（仅进行中的机会）
+    read: publicContentRead({ isOpen: { equals: true } }),
+    create: opsOnly,
+    update: opsOnly,
+    delete: opsOnly,
+  },
+  fields: [
+    {
+      name: 'title',
+      type: 'text',
+      label: '标题',
+      required: true,
+    },
+    {
+      name: 'org',
+      type: 'text',
+      label: '提供方',
+      required: true,
+    },
+    {
+      name: 'type',
+      type: 'select',
+      label: '类型',
+      defaultValue: 'job',
+      options: [
+        { label: '就业岗位', value: 'job' },
+        { label: '导师支持', value: 'mentor' },
+        { label: '资源与工具', value: 'resource' },
+        { label: '合作共建', value: 'partnership' },
+      ],
+      index: true,
+    },
+    {
+      name: 'region',
+      type: 'text',
+      label: '地区',
+    },
+    {
+      name: 'description',
+      type: 'textarea',
+      label: '描述',
+      required: true,
+    },
+    {
+      name: 'contact',
+      type: 'text',
+      label: '联系方式',
+    },
+    {
+      name: 'deadline',
+      type: 'date',
+      label: '截止日期',
+    },
+    {
+      name: 'isOpen',
+      type: 'checkbox',
+      label: '进行中',
+      defaultValue: true,
+    },
+  ],
+}

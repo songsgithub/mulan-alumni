@@ -1,0 +1,892 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+/* =====================================================================
+   Mulan 设计 token（见 docs/设计规范.md）
+   品牌色取自「数字木兰 DIGITAL MULAN」标识：紫 #9b5cf6 → 蓝 #4f7cf7 的渐变。
+   页面与组件一律使用这里的 token，不得另写颜色值。
+   ===================================================================== */
+
+@theme {
+  /* ---- 颜色：全站一套（公众站与工作台不再分两套语气）----
+     冷调中性灰（微带紫，和品牌色同一温度）：浅紫灰底 + 白色卡片 + 浅分隔线。
+     对比度（实测）：fg 15.8:1 · muted 6.3:1 · faint 4.9:1（在底色 / 白卡 / 浅灰面上都 ≥ 4.6:1）。
+     faint 原本 3.1:1，但全站有不少标签、日期用它，读者 27–55 岁，三级文字也要过 AA。 */
+  /* 2026-10-31（上线审核）：工作台与公开站**同一套调色板**——
+     工作台的 fg / bg / muted / rule / accent 直接取公开站的 ink / page / ink-muted / line / magnolia，
+     两边不再是"两种紫、两种灰"。对比度（实测，底色 #faf8ff）：
+     fg 15.6:1 · muted 6.1:1 · faint 5.0:1 · accent 白字 5.6:1。 */
+  --color-fg: #241f3d;
+  --color-bg: #faf8ff;
+  --color-muted: #625c7a;
+  --color-faint: #6e6888;
+  --color-rule: #e7e2f5;
+  --color-surface: #f4f1fd;
+  --color-inverse-fg: #ffffff;
+  --color-inverse-bg: #241f3d;
+  --color-inverse-muted: #c9c3df;
+
+  /* ---- 公开站（复刻朋友平台 muse）：蚂蚁蓝主色 + 暖白底 + 木兰粉点缀 ----
+     取自 muse/src/index.css；蓝与粉各加深一点，白字对比度从 3.9:1 提到 5.3:1（实测）。
+     只在公开站使用（工作台仍是紫色主题）。 */
+  /* 第二十轮「高级 · 温馨」：底色从冷灰蓝换成暖奶油，墨色带一点梅子调，
+     蓝色收成更柔的靛蓝，辅助面从浅蓝换成浅樱粉；名字不变，所有页面一起变 */
+  /* 第二十一轮：取官方标识色——紫 #c07bff → 蓝紫 #8a62f2 → 蓝 #4a72ff。
+     交互与文字用加深后的紫 #6b4ae6（白字 5.6:1）和蓝 #3558e0，浅面用淡紫 */
+  --color-page: #faf8ff;
+  --color-ink: #241f3d;
+  --color-ink-muted: #625c7a;
+  --color-mountain: #3558e0;
+  --color-mountain-light: #4a72ff;
+  --color-magnolia: #6b4ae6;
+  --color-magnolia-soft: #f1ecfe;
+  --color-primrose: #efeafd;
+  --color-primrose-fg: #4b3a9c;
+  --color-line: #e7e2f5;
+  --color-tape: #e9e0ff;
+  --color-blush: #f1ecfe;
+  --color-lilac: #e9efff;
+  --color-peach: #f6f0ff;
+  /* ink 的加深悬停档（深底按钮 hover） */
+  --color-ink-strong: #352d55;
+  /* blush 的加深悬停档（浅底按钮 hover） */
+  --color-blush-strong: #e6defd;
+  /* 民宿管家项目的标记点色（与 primrose-fg 同族） */
+  --color-homestay: #9a7cf2;
+
+  /* 唯一强调色：品牌紫（标识渐变里最深、对白字对比度达标的一档：5.7:1）。
+     只允许出现在按钮、焦点、悬停、选中态 */
+  --color-accent: #6b4ae6;
+  --color-accent-strong: #5a3bd4;
+  --color-accent-soft: #f1ecfe;
+  /* 品牌渐变两端（只用于标识 / 登录页的品牌面，不用于正文背景） */
+  --color-brand-from: #9b5cf6;
+  --color-brand-to: #4f7cf7;
+  /* 状态色：只表达状态，不用于交互 */
+  --color-success: #15803d;
+  --color-success-soft: #ecfdf3;
+  --color-warning: #b45309;
+  --color-warning-soft: #fff7ed;
+  --color-danger: #c42b2b;
+  --color-danger-soft: #fef2f2;
+
+  /* ---- 字体：全站一套无衬线（西文 + 中文兜底，不下载中文 webfont）---- */
+  /* 阿里巴巴普惠体（朋友平台同款，圆润亲和；按 unicode-range 分片，只下载用到的字） */
+  --font-display: 'AliBabaPuHuiTi', var(--font-inter), 'Source Han Sans SC', 'Noto Sans CJK SC', 'PingFang SC',
+    'Microsoft YaHei', 'Hiragino Sans GB', 'WenQuanYi Zen Hei', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'AliBabaPuHuiTi', var(--font-inter), 'Source Han Sans SC', 'Noto Sans CJK SC', 'PingFang SC',
+    'Microsoft YaHei', 'Hiragino Sans GB', 'WenQuanYi Zen Hei', ui-sans-serif, system-ui, sans-serif;
+
+  /* ---- 圆角：全站一套 ---- */
+  /* 圆角加大：更柔和（卡片 20 / 控件 12） */
+  --radius-card: 20px;
+  --radius-control: 12px;
+  --radius-block: 24px;
+
+  /* ---- 阴影：粉紫调，柔而不灰 ---- */
+  --shadow-soft: 0 1px 2px rgba(120, 50, 110, 0.05), 0 14px 32px -16px rgba(120, 50, 110, 0.16);
+  --shadow-lift: 0 2px 6px rgba(120, 50, 110, 0.06), 0 22px 44px -22px rgba(120, 50, 110, 0.32);
+  /* 公开站（muse，第二十轮柔化）：从「纸片错位影」改成多层柔光影，悬停时浮起并透出木兰粉 */
+  --shadow-card: 0 1px 2px rgba(36, 31, 61, 0.04), 0 10px 30px -16px rgba(60, 40, 140, 0.18);
+  --shadow-card-hover: 0 2px 6px rgba(107, 74, 230, 0.08), 0 26px 50px -22px rgba(107, 74, 230, 0.42);
+  --shadow-paper: 0 1px 2px rgba(36, 31, 61, 0.04), 0 18px 40px -24px rgba(75, 58, 156, 0.3);
+  --shadow-elegant: 0 30px 60px -28px rgba(40, 30, 110, 0.4);
+  /* 照片上的小胶囊标签（项目标签 / 类别徽标） */
+  --shadow-chip: 0 2px 10px -4px rgba(36, 31, 61, 0.25);
+  /* 深色按钮（museButton default / 白底按钮外的深底按钮） */
+  --shadow-button: 0 10px 24px -12px rgba(36, 31, 61, 0.6);
+  /* 品牌紫按钮（museButton hero / 联系我们） */
+  --shadow-button-accent: 0 12px 28px -12px rgba(107, 74, 230, 0.7);
+  --shadow-button-magnolia: 0 10px 22px -12px rgba(107, 74, 230, 0.8);
+  /* 危险操作按钮（驳回 / 解散 / 删除） */
+  --shadow-button-danger: 0 12px 28px -14px rgba(196, 43, 43, 0.6);
+  /* 导航选中项（公开站与工作台同一款深色胶囊） */
+  --shadow-nav-active: 0 8px 18px -10px rgba(36, 31, 61, 0.7);
+  /* 分页签选中项（白底浮起） */
+  --shadow-tab-active: 0 2px 8px -2px rgba(107, 74, 230, 0.25);
+  /* 压在照片上的白底按钮 */
+  --shadow-on-photo: 0 12px 30px -12px rgba(0, 0, 0, 0.5);
+
+  /* ---- 动效：全站一套缓动 ---- */
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* ---- 字号阶梯（面向 27–55 岁读者，正文基准 17px，见设计规范 §2.1） ---- */
+  --text-display-xl: clamp(2.75rem, 6.4vw, 5.25rem);
+  --text-display-xl--line-height: 0.98;
+  --text-display-xl--letter-spacing: -0.02em;
+
+  --text-display-lg: clamp(2.125rem, 4.2vw, 3.5rem);
+  --text-display-lg--line-height: 1.04;
+  --text-display-lg--letter-spacing: -0.015em;
+
+  --text-display-md: clamp(1.75rem, 2.6vw, 2.25rem);
+  --text-display-md--line-height: 1.14;
+  --text-display-md--letter-spacing: -0.01em;
+
+  --text-title: 1.375rem;
+  --text-title--line-height: 1.35;
+
+  --text-lead: clamp(1.125rem, 1.4vw, 1.4375rem);
+  --text-lead--line-height: 1.75;
+
+  --text-body: 1.0625rem;
+  --text-body--line-height: 1.85;
+
+  /* 辅助文字下限：15px → 16px（2026-10-25 第十五轮）。
+     读者里有 27–55 岁的人，15px 在手机上真的看不清；
+     眉标签（eyebrow）仍是 15px，那里是刻意做小的标签字，不是正文。 */
+  --text-small: 1rem;
+  --text-small--line-height: 1.7;
+
+  /* 辅助标签（表头、徽标、字段名）：15px，全站字号下限 */
+  --text-label: 0.9375rem;
+  --text-label--line-height: 1.6;
+
+  --text-eyebrow: 0.9375rem;
+  --text-eyebrow--line-height: 1.4;
+  --text-eyebrow--letter-spacing: 0.1em;
+
+  /* ---- 工作台的几档固定字号（以前散落成 text-[2rem] 之类的裸值，现在有名字）---- */
+  /* 页标题（PageHeader）与数字卡数字（StatCard）：32px */
+  --text-page-title: 2rem;
+  --text-page-title--line-height: 1.2;
+  --text-stat: 2rem;
+  --text-stat--line-height: 1;
+  /* 品牌字（顶栏 / 抽屉 / 登录卡上的「校友会」）：20px */
+  --text-brand-name: 1.25rem;
+  --text-brand-name--line-height: 1.3;
+  /* 登录 / 注册 / 重置密码卡片标题：36px（三页同一档） */
+  --text-auth-title: 2.25rem;
+  --text-auth-title--line-height: 1.25;
+  /* 登录页品牌面：主标语 40px、副标语 24px（都是大字，才放在渐变上） */
+  --text-hero: 2.5rem;
+  --text-hero--line-height: 1.2;
+  --text-hero-sub: 1.5rem;
+  --text-hero-sub--line-height: 1.5;
+}
+
+/* =====================================================================
+   基础样式
+   ===================================================================== */
+
+* {
+  border-color: var(--color-rule);
+}
+
+/* 可点元素一律手型指针。
+   ⚠️ Tailwind 的 preflight 不给 <button> 设 cursor，而浏览器默认给按钮画的
+   是**箭头**（只有 <a href> 才默认是手型）——于是 shadcn 的 Button、
+   Base UI 的下拉触发器 / 选项卡、各页自己写的 <button> 全是箭头，
+   跟旁边同样是可点的链接一比就露馅。
+   这条放在 @layer base 里：Tailwind 的 cursor-* 工具类仍然压得住它
+   （比如组件上的 disabled:cursor-not-allowed、cursor-default）。 */
+@layer base {
+  button:not(:disabled):not([data-disabled]),
+  [role='button']:not([aria-disabled='true']):not([data-disabled]),
+  summary:not([disabled]) {
+    cursor: pointer;
+  }
+
+  /* 禁用态不给手型，用禁止号（与组件库的 disabled:cursor-not-allowed 一致） */
+  button:disabled,
+  button[data-disabled],
+  [role='button'][aria-disabled='true'] {
+    cursor: not-allowed;
+  }
+}
+
+html {
+  /* 不要全局 smooth：Next 的路由切换也走 scrollTo，整页会被拉成一段「往上滑」的动画 */
+  scroll-behavior: auto;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html:has(:target) {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  background-color: var(--color-bg);
+  /* 极淡的点阵纸纹（与公开站 muse-page 同一款），只在大面积留白里隐约可见 */
+  background-image: radial-gradient(rgba(75, 58, 156, 0.05) 1px, transparent 1px);
+  background-size: 28px 28px;
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: var(--text-body--line-height);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* 触摸设备：去掉系统那个灰蓝色的点击高亮块。
+     反馈改由组件自己给（按钮有 active:opacity-90）。 */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 键盘可达性：焦点必须可见 */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+/* 图片默认块级，避免行内基线留白 */
+img {
+  display: block;
+}
+
+/* 选中文本：品牌紫底 + 墨色字（跟 mark-soft 同一支紫）。
+   ⚠️ 别改回「深底 + 白字」：
+      1. 深色选中块在一整段文字上太扎眼，而且字变白、其余文字不变，
+         看着像「页面坏了」；
+      2. **SVG 里的文字不吃 color**（SVG 用 fill）——
+         落地路径流程图是 SVG，深底会让字直接看不见（墨字压墨块）。
+   */
+::selection {
+  background: rgba(192, 123, 255, 0.3);
+  color: var(--color-fg);
+}
+
+/* SVG 文字（流程图）的选中态：SVG 用 fill，不吃上面的 color */
+svg text::selection {
+  fill: var(--color-fg);
+}
+
+/* =====================================================================
+   富文本正文（Lexical 官方渲染器输出）
+   ===================================================================== */
+
+/* 文章正文：18px / 行高 1.9（公众号长文的阅读节奏）。
+   正文下限从 17px 提到 18px——这是"读得下去"和"扫一眼"的区别。 */
+.prose-mulan {
+  font-size: 1.125rem;
+  line-height: 1.9;
+  color: var(--color-fg);
+}
+
+.prose-mulan p {
+  color: var(--color-fg);
+}
+
+.prose-mulan > * + * {
+  margin-top: 1.25em;
+}
+
+.prose-mulan :is(h2, h3) {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--color-fg);
+}
+
+.prose-mulan h2 {
+  font-size: clamp(1.625rem, 2.4vw, 2rem);
+  margin-top: 2.2em;
+}
+
+.prose-mulan h3 {
+  font-size: clamp(1.3125rem, 1.8vw, 1.5rem);
+  margin-top: 1.8em;
+}
+
+.prose-mulan :is(ul, ol) {
+  margin-left: 1.25rem;
+  padding-left: 0.25rem;
+}
+
+.prose-mulan ul {
+  list-style: disc;
+}
+
+.prose-mulan ol {
+  list-style: decimal;
+}
+
+.prose-mulan li + li {
+  margin-top: 0.5em;
+}
+
+.prose-mulan a {
+  color: var(--color-fg);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+}
+
+.prose-mulan blockquote {
+  border-left: 2px solid var(--color-fg);
+  padding-left: 1.25rem;
+  color: var(--color-muted);
+  font-size: 1.0625rem;
+}
+
+.prose-mulan strong {
+  font-weight: 600;
+}
+
+/* =====================================================================
+   shadcn/ui 主题变量
+   ---------------------------------------------------------------------
+   组件库（src/components/ui/*）用这组变量取色，值指向业务端的暖色基调，
+   所以「换组件库」不会把刚做的柔化调子改回去。公众站不引用这组变量。
+   ===================================================================== */
+:root {
+  /* 工作台的吸顶层：顶栏固定 64px，活动页的标题条再叠 56px。
+     写成变量，吸顶偏移就不用再靠猜（改高度时只改这里）。 */
+  /* 与公开站顶栏同高（68px） */
+  --workspace-header-h: 68px;
+  --workspace-bar-h: 56px;
+  --workspace-stack-top: 124px;
+
+  /* 与上面 @theme 的工作台 token 同值（= 公开站调色板） */
+  --background: #faf8ff;
+  --foreground: #241f3d;
+  --card: #ffffff;
+  --card-foreground: #241f3d;
+  --popover: #ffffff;
+  --popover-foreground: #241f3d;
+  --primary: #6b4ae6;
+  --primary-foreground: #ffffff;
+  --secondary: #f1ecfe;
+  --secondary-foreground: #241f3d;
+  --console-muted: #f4f1fd;
+  --muted-foreground: #625c7a;
+  --console-accent: #f1ecfe;
+  --accent-foreground: #241f3d;
+  /* 危险操作（驳回 / 解散 / 删除）用红色，和主操作的紫色分开 */
+  --destructive: #c42b2b;
+  --destructive-foreground: #ffffff;
+  --border: #e7e2f5;
+  --input: #ddd6f1;
+  --ring: #6b4ae6;
+  --radius: 0.75rem;
+
+  /* 品牌渐变：标识同款（紫 → 靛 → 蓝） */
+  --gradient-brand: linear-gradient(160deg, #c07bff 0%, #8a62f2 50%, #4a72ff 100%);
+}
+
+/* 品牌面：标识、登录 / 注册页的品牌栏。
+   ⚠️ 纯渐变最亮端（#c07bff）上的白字只有约 2.8:1，连 AA 大字 3:1 都不到，
+   所以这里在渐变上压一层 25% 的墨色：最亮处白字提到约 4.1:1（实算）。
+   仍然**只放大字**（≥24px，或 ≥19px 粗体），正文、表单与小字一律不放在渐变上。 */
+@utility bg-brand {
+  background-image: linear-gradient(rgba(36, 31, 61, 0.25), rgba(36, 31, 61, 0.25)), var(--gradient-brand);
+  color: #ffffff;
+}
+
+/* 公开站：手写批注式小标签（muse 的 hand-note） */
+@utility hand-note {
+  color: var(--color-magnolia);
+  letter-spacing: 0.12em;
+}
+
+/* 公开站外壳：muse 的暖白底 + 双层错位点阵纸纹 */
+@utility muse-page {
+  background-color: var(--color-page);
+  /* 顶部一团标识色的柔光（左紫右蓝）+ 极淡的点阵纸纹 */
+  background-image:
+    radial-gradient(60rem 36rem at 12% -6rem, rgba(192, 123, 255, 0.22), transparent 70%),
+    radial-gradient(52rem 32rem at 92% 4rem, rgba(74, 114, 255, 0.16), transparent 70%),
+    radial-gradient(rgba(75, 58, 156, 0.05) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 28px 28px;
+  background-repeat: no-repeat, no-repeat, repeat;
+  color: var(--color-ink);
+}
+
+/* 工作台页面底：与公众站同一片顶部柔光（左紫右蓝）。
+   底色仍是工作台自己的暖白（--color-bg），只是顶部这一层光晕与公众站同款，
+   翻到工作台时不会像换了一个产品。 */
+@utility console-page {
+  background-image:
+    radial-gradient(60rem 34rem at 12% -8rem, rgba(192, 123, 255, 0.14), transparent 70%),
+    radial-gradient(52rem 30rem at 92% -6rem, rgba(74, 114, 255, 0.1), transparent 70%);
+  background-repeat: no-repeat, no-repeat;
+}
+
+/* 首页轮播的进度条：从 0 走到满 */
+@keyframes carousel-progress {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+
+/* 公开站：柔光面板（樱粉 → 奶白 → 薰衣草），用于数字条、行动号召、团队区 */
+@utility glow-panel {
+  background-image:
+    radial-gradient(80% 120% at 0% 0%, rgba(192, 123, 255, 0.22), transparent 60%),
+    radial-gradient(70% 120% at 100% 100%, rgba(74, 114, 255, 0.18), transparent 60%),
+    linear-gradient(180deg, #ffffff, #f6f3ff);
+}
+
+/* 公开站：官方标识渐变（紫 → 蓝紫 → 蓝）。白字只放大字 */
+@utility bg-mulan {
+  background-image: linear-gradient(160deg, #c07bff 0%, #8a62f2 50%, #4a72ff 100%);
+}
+
+/* 批注卡的纸面渐变（活动摘要 / 关于我们，两页同款） */
+@utility bg-note {
+  background-image: linear-gradient(120deg, #efe9ff, #f4f1ff 50%, #e8efff);
+}
+
+/* 照片上的暗角：底部压暗托住白字。
+   详情页 Banner 用 img-shade；首页轮播文字更多，用更强的 img-shade-strong；
+   img-shade-side 是轮播左侧的额外一层。 */
+@utility img-shade {
+  background-image: linear-gradient(to top, rgba(28, 22, 58, 0.88) 0%, rgba(28, 22, 58, 0.3) 50%, transparent 80%);
+}
+
+@utility img-shade-strong {
+  background-image: linear-gradient(to top, rgba(28, 22, 58, 0.92) 0%, rgba(28, 22, 58, 0.55) 50%, rgba(28, 22, 58, 0) 85%);
+}
+
+/* 工作台团主页大图：只压一点点，托住右下角的「更换图片」按钮 */
+@utility img-shade-soft {
+  background-image: linear-gradient(to top, rgba(28, 22, 58, 0.45), transparent 55%);
+}
+
+@utility img-shade-side {
+  background-image: linear-gradient(to right, rgba(28, 22, 58, 0.35), transparent 55%);
+}
+
+/* 首页地图的悬停框（geo 区域的 tooltip 只认 className，不认 backgroundColor 等配置）。
+   外层容器永远保持透明——它空着的时候也会占一块，一旦上底色就成了地图下方那条黑线。 */
+.chor-tooltip {
+  background: transparent !important;
+  border: 0 !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+
+.chor-tooltip-inner {
+  background: rgba(36, 31, 61, 0.94);
+  border-radius: 14px;
+  padding: 12px 14px;
+  box-shadow: 0 18px 40px -20px rgba(43, 32, 53, 0.6);
+  color: #fff;
+  /* 15px：全站辅助文字下限 */
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.chor-tooltip-inner ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* 公开站：大标题里被强调的几个字——下面垫一笔淡紫色的「荧光笔」 */
+@utility mark-soft {
+  background-image: linear-gradient(transparent 62%, rgba(192, 123, 255, 0.32) 62%, rgba(192, 123, 255, 0.32) 92%, transparent 92%);
+  padding: 0 0.08em;
+}
+
+/* 公开站：胶带贴纸——卡片顶上斜贴一条米色胶带 */
+@utility tape {
+  position: relative;
+  &::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-3deg);
+    width: 90px;
+    height: 22px;
+    background: rgba(220, 205, 255, 0.85);
+    border-left: 1px dashed rgba(29, 39, 53, 0.15);
+    border-right: 1px dashed rgba(29, 39, 53, 0.15);
+    box-shadow: 0 1px 3px rgba(29, 39, 53, 0.12);
+    z-index: 1;
+  }
+}
+
+/* 柔光底：薰衣草 → 樱粉 → 奶白，用于首屏、空状态、数据卡头部（上面放深色字） */
+@utility bg-blush {
+  background-image:
+    radial-gradient(120% 90% at 0% 0%, rgba(155, 92, 246, 0.14) 0%, transparent 55%),
+    radial-gradient(110% 90% at 100% 0%, rgba(232, 121, 160, 0.16) 0%, transparent 55%),
+    linear-gradient(180deg, #ffffff 0%, #fcf8fb 100%);
+}
+
+/* 工作台卡片 / 区块标题：与公开站卡片标题同一口径（display 19px / 600）。
+   全站只此一种写法：<SectionTitle> 组件或 className="section-title" */
+@utility section-title {
+  font-family: var(--font-display);
+  font-size: 1.1875rem;
+  line-height: 1.4;
+  font-weight: 600;
+  color: var(--color-fg);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-console-muted: var(--console-muted);
+  --color-console-accent: var(--console-accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+/* =====================================================================
+   工作台样式层
+   ---------------------------------------------------------------------
+   与公众站共用同一套 token、同一套组件库、同一套动效（全站一个系统）。
+   这里只放**跨页面复用**的容器与图形类，页面内不拼版式。
+   ===================================================================== */
+
+/* 管理端容器：与公众站同口径的宽屏（见 docs/设计规范.md §3.2） */
+.container-page {
+  margin-inline: auto;
+  width: 100%;
+  /* 与公开站版心同宽（Wrap：1680px） */
+  max-width: 1680px;
+  padding-inline: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .container-page {
+    padding-inline: 2rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .container-page {
+    padding-inline: 3rem;
+  }
+}
+
+/* ---- 控件基调 ------------------------------------------------------------
+   面向 27–55 岁女性用户，控件要够大、够柔、也有力量：
+   按钮 44px（h-11）、输入框 48px（h-12）、圆角 10px（rounded-control）。 */
+
+
+
+
+
+
+
+
+
+
+
+/* 地图画布高度：窄屏 300px（手机上是定位辅助，不是主内容），
+   桌面用组件传入的高度（--map-canvas-h）。 */
+.map-canvas {
+  min-height: 300px;
+}
+
+@media (min-width: 768px) {
+  .map-canvas {
+    min-height: var(--map-canvas-h, 620px);
+  }
+}
+
+/* =====================================================================
+   自适应表格（.resp-table）
+   ---------------------------------------------------------------------
+   窄屏把每一行摊成一张卡（标签在上、值在下），宽屏保持普通表格。
+
+   为什么用 CSS 而不是渲染两份 DOM：
+   **表单里的 input 不能渲染两遍**——两遍会让 FormData 里出现重复字段，
+   提交上去金额就翻倍了。只读表格没有这个约束，用 ResponsiveTable 组件即可。
+
+   `data-label` 是窄屏时显示在值上方的字段名。
+   ===================================================================== */
+@media (max-width: 639px) {
+  .resp-table,
+  .resp-table tbody,
+  .resp-table tr,
+  .resp-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .resp-table thead {
+    display: none;
+  }
+
+  .resp-table tr {
+    margin-bottom: 0.75rem;
+    padding: 0.875rem;
+    border: 1px solid var(--color-rule);
+    border-radius: var(--radius-card);
+    background: var(--color-surface);
+  }
+
+  .resp-table tr:last-child {
+    margin-bottom: 0;
+  }
+
+  .resp-table td {
+    padding: 0.25rem 0;
+    text-align: left;
+    white-space: normal;
+  }
+
+  .resp-table td[data-label]::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    color: var(--color-muted);
+  }
+}
+
+/* ------------------------------------------------------------------ 打印
+   PDF 由服务端按需生成；这里只保证直接打印页面时不带出工具栏。 */
+@media print {
+  @page {
+    size: A4;
+    margin: 12mm 14mm;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+  }
+}
+
+/* ------------------------------------------------------------------ 文档视图
+   活动详情/审批页左侧、申请表预览：按「待生成 PDF」的公文样式排，
+   但仍是页面里的 HTML（可滚动、可选中），控件与按钮保持业务端 UI。
+
+   ⚠️ 这里的字号/行距**必须与 src/components/pdf/ActivityHtml.tsx 的 docCss 保持一致**
+   （2026-11-02 第三十八轮）：文档按 GB/T 9704-2012 排版——
+   正文三号 16pt、文件标题二号 22pt、表格四号 14pt、行距固定值 28.9pt。
+   两处不一致时，页面版与打印出来的东西就不是同一份文档了。
+   （本页这些选择器带 !important，优先级高于 docCssScoped，所以要在这里同步） */
+@font-face {
+  font-family: 'NotoSerifSC';
+  src: url('/fonts/noto-serif-sc-regular.ttf') format('truetype');
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'NotoSerifSC';
+  src: url('/fonts/noto-serif-sc-bold.ttf') format('truetype');
+  font-weight: 700;
+  font-display: swap;
+}
+
+.activity-doc {
+  font-family: 'NotoSerifSC', 'Songti SC', serif;
+  color: #111111;
+  /* 正文三号 16pt + 固定行距 28.9pt（与 PDF 同） */
+  font-size: 16pt;
+  line-height: 28.9pt;
+}
+
+.activity-doc h1 {
+  /* 文件标题二号 22pt（与 PDF 同） */
+  font-size: 22pt;
+  line-height: 36pt;
+}
+
+.activity-doc h2 {
+  /* 一级标题三号 16pt（与 PDF 同） */
+  font-size: 16pt;
+  line-height: 28.9pt;
+}
+
+.activity-doc dl > div {
+  padding-top: 6pt;
+  padding-bottom: 6pt;
+  border-bottom-color: #dcd8e6;
+}
+
+.activity-doc table th,
+.activity-doc table td {
+  border: 0.6pt solid #333333 !important;
+  background: #ffffff !important;
+  padding: 6pt 8pt !important;
+  /* 表格四号 14pt（与 PDF 同） */
+  font-size: 14pt !important;
+  color: #111111;
+}
+
+/**
+ * 填报区里**下拉框显示的那行文字**的字号：跟表格标签同号（14pt）。
+ *
+ * ⚠️ 2026-11-04 修的字号不一致：
+ * 下拉框里的文字（`select-value`）没有自己的字号，会继承 `.activity-doc` 的正文
+ * 16pt（≈21.3px）——比旁边的标签（14pt）还大一号，看着像「下拉框的字比标题还大」。
+ * 这条规则要放在下面「文档里的可编辑字段」那条**之后**（同优先级时后面的胜），
+ * 具体规则见下方同名规则。
+ */
+
+/**
+ * 窄屏：表格给一个最小宽度，容器横向滚动。
+ *
+ * 不给最小宽度的话，窄屏（320px）会把表格压到 200 多 px，
+ * 单元格里的中文被挤成竖排（一列一个字），完全没法看。
+ * 给最小宽度 + 横向滚动，读起来就像纸质表的缩放版。
+ *
+ * ⚠️ 只作用于**页面**（`.activity-doc`）：打印走的是 PDF 自己那份 CSS（没有这个类），
+ * A4 纸面不能出现横向滚动条。
+ */
+.activity-doc table.data,
+.activity-doc table.fields,
+.activity-doc table.version-diff {
+  min-width: 620px;
+}
+
+.activity-doc .section,
+.activity-doc .sub {
+  overflow-x: auto;
+}
+
+.activity-doc table thead tr {
+  background: #ffffff !important;
+}
+
+.activity-doc table thead th {
+  font-weight: 700 !important;
+  text-align: center;
+}
+
+.activity-doc table tfoot td,
+.activity-doc table tr.total td {
+  font-weight: 700;
+}
+
+/* 文档里的可编辑字段：像 Word 里的填空线，而不是一堆盒子 */
+.activity-doc input:not([type='checkbox']):not([type='file']):not([type='hidden']),
+.activity-doc textarea,
+.activity-doc [data-select],
+.activity-doc [data-date-picker] {
+  font-family: inherit !important;
+  /* 表格四号 14pt（2026-11-04 改：原来 12.5pt，跟表格标签不同号，
+     同一张表里字号参差；现在跟标签、跟 PDF 完全一致） */
+  font-size: 14pt !important;
+  color: #111111 !important;
+  background: transparent !important;
+  border: 0 !important;
+  border-bottom: 0.8pt solid #b3aec4 !important;
+  border-radius: 0 !important;
+  padding: 3pt 2pt !important;
+  height: auto !important;
+  min-height: 0 !important;
+  box-shadow: none !important;
+}
+
+/**
+ * 下拉框里**显示的那行文字**（`select-value`）。
+ *
+ * ⚠️ 它不在上面那条规则的选择器里（那条管的是触发按钮），
+ *    而它自己没有字号 → 会继承 `.activity-doc` 的正文 16pt（≈21.3px），
+ *    比旁边的标签还大一号。必须单独定成 14pt。
+ */
+.activity-doc [data-slot='select-value'] {
+  font-size: 14pt !important;
+  line-height: 22pt;
+}
+
+.activity-doc [data-select],
+.activity-doc [data-date-picker] {
+  width: 100%;
+  justify-content: space-between;
+}
+
+/* 必填项的星号：红色（申请表 / 反馈表 / 报销单里都统一用这个） */
+.activity-doc .req {
+  color: var(--color-danger);
+  margin-left: 0.15em;
+}
+
+/* 日期框跟其它填空字段完全一样：不带日历图标，文字左对齐 */
+.activity-doc [data-date-picker] {
+  justify-content: flex-start;
+  gap: 0;
+}
+
+.activity-doc [data-date-picker] svg {
+  display: none !important;
+}
+
+/* 窄屏：公文表格保持原样（与 PDF 同一张表），在**自己的框里**横向滚动，
+   不把整页撑出横向滚动条。`display:block` 让表格本身成为滚动容器，
+   浏览器会在里面补一个匿名表格盒，行列布局不受影响。 */
+@media (max-width: 767px) {
+  .activity-doc table.data {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* 「字段表」（标签 | 值 | 标签 | 值）在手机上改成两列：一行一个「标签 | 值」。
+     四列硬挤在 300px 里，日期会被拆成一字一行。
+     单元格顺序本来就是 标签、值、标签、值，交给两列网格自然排开；跨列的值照样落在值那一列。 */
+  .activity-doc table.fields,
+  .activity-doc table.fields tbody {
+    display: block;
+    width: 100%;
+  }
+
+  .activity-doc table.fields colgroup {
+    display: none;
+  }
+
+  .activity-doc table.fields tr {
+    display: grid;
+    /* 标签列按最长的六字标签（计划活动时间）+ 内边距定宽 */
+    grid-template-columns: 7.8em minmax(0, 1fr);
+  }
+
+  .activity-doc table.fields th,
+  .activity-doc table.fields td {
+    display: block;
+    /* 表格模式下的列宽（17% / 33%）在网格里会把格子压成 20 多像素，这里撑满各自那一列 */
+    width: auto !important;
+    min-width: 0;
+    /* 相邻格子的边框叠在一起，不加粗 */
+    margin: 0 0 -0.6pt -0.6pt;
+    text-align: left;
+    overflow-wrap: anywhere;
+  }
+}
+
+/* 文档里的卡片一律去掉边框/底色，只留内容，避免像
+ * 页面里套页面。 */
+.activity-doc .rounded-card {
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.activity-doc .section-head {
+  margin-top: 24pt;
+}
+
+/* 文档里的输入控件聚焦时不要整圈红框，只让底线变深 */
+.activity-doc input:focus-visible,
+.activity-doc textarea:focus-visible,
+.activity-doc [data-select]:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  border-bottom-color: #111111 !important;
+}
+
+
+/* Select 选项：焦点在选项上时不要画全局的强调色外框（选项本身已有高亮底色） */
+[data-slot='select-item']:focus,
+[data-slot='select-item']:focus-visible {
+  outline: none !important;
+}

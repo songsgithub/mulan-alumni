@@ -1,0 +1,30 @@
+node_modules/
+.next/
+out/
+build/
+dist/
+.DS_Store
+*.pem
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.env
+.env.*
+!.env.example
+next-env.d.ts
+*.tsbuildinfo
+payload-types.ts
+media/
+public/media/
+# 地图边界缓存（scripts/fetch-geo.ts 可重新拉取）
+data/
+# 调试中间产物（截图 / 日志 / 试生成的 PDF）
+tmp/
+finance-evidence/
+public/finance-evidence/
+*.db
+*.db-journal
+.idea/
+.vscode/
+*.log
+backups/

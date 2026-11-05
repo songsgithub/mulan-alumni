@@ -1,0 +1,68 @@
+# 数据库与对象存储。
+# - 端口只绑本机 127.0.0.1：数据库与存储不直接对公网开放（生产由应用容器 / 反向代理访问）。
+# - 账号密码一律从 .env 读取（见 .env.example），compose 里只给本地开发的兜底值；
+#   生产环境必须在 .env 里改掉。
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: mulan-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-mulan}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-mulan}
+      POSTGRES_DB: ${POSTGRES_DB:-mulan_alumni}
+      # 中文排序与大小写规则友好
+      LANG: C.UTF-8
+    ports:
+      # 本机已有别的 PostgreSQL 占着 5432 时，在 .env 里设 POSTGRES_PORT=5433
+      - '127.0.0.1:${POSTGRES_PORT:-5432}:5432'
+    volumes:
+      - mulan-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-mulan} -d ${POSTGRES_DB:-mulan_alumni}']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # 可选：S3 兼容对象存储（活动原图 / 学习资源视频 / 财务凭证）
+  # 启用：docker compose --profile storage up -d
+  minio:
+    image: minio/minio:latest
+    container_name: mulan-minio
+    restart: unless-stopped
+    profiles: ['storage']
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-mulanadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-change-me-minio-password}
+    ports:
+      - '127.0.0.1:9000:9000'
+      - '127.0.0.1:9001:9001'
+    volumes:
+      - mulan-minio:/data
+
+  # 应用本体（生产）：docker compose --profile app up -d --build
+  # 前面要有反向代理（Nginx / 网关）做 HTTPS，并把三个域名都转到这里：
+  #   www.xxx（公开站）/ connect.xxx（工作台）/ admin.xxx（CMS，建议只对内网或 VPN 开放）
+  # 反向代理需设 client_max_body_size 2g（学习视频）与 X-Real-IP（限流按真实 IP 计）。
+  app:
+    build: .
+    container_name: mulan-app
+    restart: unless-stopped
+    profiles: ['app']
+    env_file: .env
+    environment:
+      DATABASE_URI: postgresql://${POSTGRES_USER:-mulan}:${POSTGRES_PASSWORD:-mulan}@postgres:5432/${POSTGRES_DB:-mulan_alumni}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - '127.0.0.1:3000:3000'
+    volumes:
+      # 未启用 S3 时，活动原图 / 学习视频 / 财务凭证都在这里：必须持久化并纳入备份（scripts/backup.sh）
+      - ./media:/app/media
+      - ./finance-evidence:/app/finance-evidence
+
+volumes:
+  mulan-pgdata:
+  mulan-minio:
